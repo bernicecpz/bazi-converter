@@ -1,29 +1,18 @@
-import * as fs from 'fs';
 import {fileURLToPath} from 'url';
 import path from 'path';
+import { loadRawData, loadRawDataToMap } from './functions/common.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-let rawdata = fs.readFileSync(__dirname + '/data/dizi.json')
-const $dizi = JSON.parse(rawdata);
+const $dizi = loadRawData(__dirname + '/data/dizi.json');
+const $tiangang = loadRawData(__dirname + '/data/tiangan.json');
+const $dates_mapping = loadRawData(__dirname + '/data/dates_mapping.json');
+const $hour_mapping = loadRawData(__dirname + '/data/hour_mapping.json');
+const $earthly_branches_english_map = loadRawDataToMap(__dirname + '/data/earthly_branches_english.json');
+const $heavenly_stems_english_map = loadRawDataToMap(__dirname + '/data/heavenly_stems_english.json');
+const $elements_mapping = loadRawDataToMap(__dirname + '/data/elements_mapping.json');
 
-rawdata = fs.readFileSync(__dirname + '/data/tiangan.json');
-const $tiangang = JSON.parse(rawdata);
-
-rawdata = fs.readFileSync(__dirname + '/data/dates_mapping.json');
-const $dates_mapping = JSON.parse(rawdata);
-
-rawdata = fs.readFileSync(__dirname + '/data/hour_mapping.json');
-const $hour_mapping = JSON.parse(rawdata);
-
-rawdata = fs.readFileSync(__dirname + '/data/earthly_branches_english.json');
-const $earthly_branches_english_json = JSON.parse(rawdata);
-const $earthly_branches_english_map = new Map(Object.entries($earthly_branches_english_json));
-
-rawdata = fs.readFileSync(__dirname + '/data/heavenly_stems_english.json');
-const $heavenly_stems_english_json = JSON.parse(rawdata);
-const $heavenly_stems_english_map = new Map(Object.entries($heavenly_stems_english_json));
 
 /**
  * @class BaziConverter
