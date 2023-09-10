@@ -183,7 +183,7 @@ export default class BaziConverter{
             "time": baziTimeEZ
         };
 
-        return baziJsonChinese;
+        return baziJson;
     }   
 
     /**
