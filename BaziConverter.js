@@ -12,6 +12,7 @@ const $hour_mapping = loadRawData(__dirname + '/data/hour_mapping.json');
 const $earthly_branches_english_map = loadRawDataToMap(__dirname + '/data/earthly_branches_english.json');
 const $heavenly_stems_english_map = loadRawDataToMap(__dirname + '/data/heavenly_stems_english.json');
 const $elements_mapping = loadRawDataToMap(__dirname + '/data/elements_mapping.json');
+const $zodic_mapping = loadRawDataToMap(__dirname + '/data/zodiac_mapping.json');
 
 
 /**
@@ -146,6 +147,44 @@ export default class BaziConverter{
             "animal_mnemonic": earthly_branch_mapping.animal_mnemonic
         }
     }
+
+
+    getElementalZodiacMappingChinese(baziEnglish) {
+        const baziEnglishArr = baziEnglish.split(" ");
+        const element = baziEnglishArr[0];
+        const zodiac = baziEnglishArr[1];
+
+        const chinese_element = $elements_mapping.get(element);
+        const chinese_zodiac = $zodic_mapping.get(zodiac);
+
+        return chinese_element + chinese_zodiac;
+
+    }
+    
+    getBaziJsonWithElementalZodiac(){
+        const baziJsonEnglish = this.translateBaziEnglish()
+        
+        const baziJsonEnglishYear = baziJsonEnglish.year
+        const baziJsonEnglishMonth = baziJsonEnglish.month
+        const baziJsonEnglishDay = baziJsonEnglish.day
+        const baziJsonEnglishTime = baziJsonEnglish.time
+
+        const baziYearEZ = this.getElementalZodiacMappingChinese(baziJsonEnglishYear);
+        const baziMonthEZ = this.getElementalZodiacMappingChinese(baziJsonEnglishMonth);
+        const baziDayEZ = this.getElementalZodiacMappingChinese(baziJsonEnglishDay);
+        const baziTimeEZ = this.getElementalZodiacMappingChinese(baziJsonEnglishTime);
+
+        let baziJson = this.getBaziJson();
+
+        baziJson.zodiac = {
+            "year": baziYearEZ,
+            "month": baziMonthEZ,
+            "day": baziDayEZ,
+            "time": baziTimeEZ
+        };
+
+        return baziJsonChinese;
+    }   
 
     /**
      * translateBaziEnglish Translate the bazi results from Chinese to English
