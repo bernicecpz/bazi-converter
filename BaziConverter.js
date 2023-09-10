@@ -5,7 +5,6 @@ import { loadRawData, loadRawDataToMap } from './functions/common.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-<<<<<<< HEAD
 const $dizi = loadRawData(__dirname + '/data/dizi.json');
 const $tiangang = loadRawData(__dirname + '/data/tiangan.json');
 const $dates_mapping = loadRawData(__dirname + '/data/dates_mapping.json');
@@ -14,32 +13,6 @@ const $earthly_branches_english_map = loadRawDataToMap(__dirname + '/data/earthl
 const $heavenly_stems_english_map = loadRawDataToMap(__dirname + '/data/heavenly_stems_english.json');
 const $elements_mapping = loadRawDataToMap(__dirname + '/data/elements_mapping.json');
 const $zodic_mapping = loadRawDataToMap(__dirname + '/data/zodiac_mapping.json');
-
-=======
-let rawdata = fs.readFileSync(__dirname + "/data/dizi.json");
-const $dizi = JSON.parse(rawdata);
-
-rawdata = fs.readFileSync(__dirname + "/data/tiangan.json");
-const $tiangang = JSON.parse(rawdata);
-
-rawdata = fs.readFileSync(__dirname + "/data/dates_mapping.json");
-const $dates_mapping = JSON.parse(rawdata);
-
-rawdata = fs.readFileSync(__dirname + "/data/hour_mapping.json");
-const $hour_mapping = JSON.parse(rawdata);
-
-rawdata = fs.readFileSync(__dirname + "/data/earthly_branches_english.json");
-const $earthly_branches_english_json = JSON.parse(rawdata);
-const $earthly_branches_english_map = new Map(
-  Object.entries($earthly_branches_english_json)
-);
-
-rawdata = fs.readFileSync(__dirname + "/data/heavenly_stems_english.json");
-const $heavenly_stems_english_json = JSON.parse(rawdata);
-const $heavenly_stems_english_map = new Map(
-  Object.entries($heavenly_stems_english_json)
-);
->>>>>>> 072cbec5f38a4b9c863d3551dee1686ff949ab51
 
 /**
  * @class BaziConverter
@@ -231,8 +204,8 @@ export default class BaziConverter {
     /**
      * getBaziEnglishMapping Each pillar consist of 2 characters for the bazi in the format of heavenly stem + earthly stem
      * @method
-     * @param baziChinese A valid bazi (2 Chinese characters) from any of the 4 pillars
-     * @returns {JSON} Returns the associated animal mnemonic, element and organ
+     * @param {String} baziChinese A valid bazi (2 Chinese characters) from any of the 4 pillars
+     * @returns {JSON} Returns the associated animal mnemonic and element in English
      */
     getBaziEnglishMapping(baziChinese) {
         const baziChineseArr = baziChinese.split("");
@@ -248,6 +221,12 @@ export default class BaziConverter {
         }
     }
 
+    /**
+     * getElementalZodiacMappingChinese To get the element and zodiac that are commonly used
+     * @method
+     * @param {String} baziEnglish A valid bazi in English (Element + Animal Mnemonic) from any of the 4 pillars
+     * @returns {String} Returns the associated animal mnemonic (or zodiac)and element in Chinese
+     */
     getElementalZodiacMappingChinese(baziEnglish) {
         const baziEnglishArr = baziEnglish.split(" ");
         const element = baziEnglishArr[0];
@@ -260,6 +239,11 @@ export default class BaziConverter {
 
     }
     
+    /**
+     * getBaziJsonWithElementalZodiac To compute bazi result with commonly used terms i.e. element and zodiac (or animal mnemonic)
+     * @method
+     * @returns {JSON} Return the Bazi result with commonly used terms in Chinese
+     */
     getBaziJsonWithElementalZodiac(){
         const baziJsonEnglish = this.translateBaziEnglish()
         
@@ -268,6 +252,7 @@ export default class BaziConverter {
         const baziJsonEnglishDay = baziJsonEnglish.day
         const baziJsonEnglishTime = baziJsonEnglish.time
 
+        // EZ = Elemental Zodiac
         const baziYearEZ = this.getElementalZodiacMappingChinese(baziJsonEnglishYear);
         const baziMonthEZ = this.getElementalZodiacMappingChinese(baziJsonEnglishMonth);
         const baziDayEZ = this.getElementalZodiacMappingChinese(baziJsonEnglishDay);
@@ -275,7 +260,7 @@ export default class BaziConverter {
 
         let baziJson = this.getBaziJson();
 
-        baziJson.zodiac = {
+        baziJson.simplified = {
             "year": baziYearEZ,
             "month": baziMonthEZ,
             "day": baziDayEZ,
